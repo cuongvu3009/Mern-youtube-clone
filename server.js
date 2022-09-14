@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./db/connectDB');
-
+connectDB(process.env.MONGO_URI);
 // extra security packages
 const helmet = require('helmet');
 const cors = require('cors');
@@ -53,13 +53,4 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 8000;
 
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URI);
-    app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-start();
+app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));

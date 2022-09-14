@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 // extra security packages
 const helmet = require('helmet');
@@ -19,6 +20,8 @@ const userRouter = require('./routes/users');
 const videoRouter = require('./routes/videos');
 
 //middlewares
+app.use(cookieParser());
+app.use(express.json());
 app.set('trust proxy', 1);
 app.use(
   rateLimiter({
@@ -26,7 +29,6 @@ app.use(
     max: 100, // limit each IP to 100 requests per windowMs
   })
 );
-app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(xss());

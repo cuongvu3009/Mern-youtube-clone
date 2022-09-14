@@ -3,8 +3,13 @@ const Video = require('../models/Video');
 const User = require('../models/User');
 
 const addVideo = async (req, res) => {
-  const newVideo = await Video.create({ userId: req.user.id, ...req.body });
-  res.status(201).json(newVideo);
+  const newVideo = new Video({ userId: req.user.id, ...req.body });
+  try {
+    const savedVideo = await newVideo.save();
+    res.status(200).json(savedVideo);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const updateVideo = async (req, res, next) => {

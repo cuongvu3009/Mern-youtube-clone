@@ -50,7 +50,11 @@ const googleAuth = async (req, res, next) => {
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       res
-        .cookie('access_token', token, { httpOnly: true })
+        .cookie('access_token', token, {
+          httpOnly: true,
+          signed: true,
+          secure: process.env.NODE_ENV === 'production',
+        })
         .status(200)
         .json(user._doc);
     } else {
@@ -61,7 +65,11 @@ const googleAuth = async (req, res, next) => {
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
       const savedUser = newUser.save();
       res
-        .cookie('access_token', token, { httpOnly: true })
+        .cookie('access_token', token, {
+          httpOnly: true,
+          signed: true,
+          secure: process.env.NODE_ENV === 'production',
+        })
         .status(200)
         .json(savedUser._doc);
     }

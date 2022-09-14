@@ -20,7 +20,7 @@ const userRouter = require('./routes/users');
 const videoRouter = require('./routes/videos');
 
 //middlewares
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.json());
 app.set('trust proxy', 1);
 app.use(

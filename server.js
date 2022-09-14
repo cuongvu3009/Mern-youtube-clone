@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const connectDB = require('./db/connectDB');
-connectDB(process.env.MONGO_URI);
+const mongoose = require('mongoose');
+
 // extra security packages
 const helmet = require('helmet');
 const cors = require('cors');
@@ -50,6 +50,13 @@ app.use((err, req, res, next) => {
     message,
   });
 });
+
+const connectDB = async () => {
+  await mongoose.connect(process.env.MONGO_URI);
+  console.log('DB is connected!');
+};
+
+connectDB();
 
 const PORT = process.env.PORT || 8000;
 

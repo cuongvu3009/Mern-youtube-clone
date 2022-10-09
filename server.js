@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
 //	db
-const connectDB = require('./db/connectDB');
+const connectDB = require('./db/connect');
 
 // extra security packages
 const helmet = require('helmet');

@@ -3,6 +3,9 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
+//	db
+const connectDB = require('./db/connectDB');
+
 // extra security packages
 const helmet = require('helmet');
 const cors = require('cors');
@@ -53,13 +56,17 @@ app.use((err, req, res, next) => {
   });
 });
 
-const connectDB = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
-  console.log('DB is connected!');
-};
-
-connectDB();
-
 const PORT = process.env.PORT || 8000;
 
-app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    console.log('DB connected');
+    app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//	start server
+start();

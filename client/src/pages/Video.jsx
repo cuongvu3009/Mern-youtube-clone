@@ -4,6 +4,8 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Comments from '../components/Comments';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -170,10 +172,20 @@ const Video = () => {
           </Info>
           <Buttons>
             <Button onClick={handleLike}>
-              <ThumbUpOutlinedIcon />
+              {currentUser && currentVideo.likes.includes(currentUser._id) ? (
+                <ThumbUpIcon />
+              ) : (
+                <ThumbUpOutlinedIcon />
+              )}
+              {currentVideo.likes && currentVideo.likes.length}
             </Button>
             <Button onClick={handleDislike}>
-              <ThumbDownOffAltOutlinedIcon />
+              {currentUser &&
+              currentVideo.dislikes.includes(currentUser._id) ? (
+                <ThumbDownIcon />
+              ) : (
+                <ThumbDownOffAltOutlinedIcon />
+              )}
               Dislike
             </Button>
             <Button>
@@ -191,7 +203,7 @@ const Video = () => {
             <ChannelDetail>
               <ChannelName>{channel.name}</ChannelName>
               <ChannelCounter>
-                {/* {channel.subscribers.length} subscribers */}
+                {channel.subscribers && channel.subscribers.length} subscribers
               </ChannelCounter>
               <Description>{currentVideo.desc}</Description>
             </ChannelDetail>

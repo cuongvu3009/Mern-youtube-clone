@@ -44,38 +44,4 @@ const signIn = async (req, res, next) => {
     .json(other);
 };
 
-const googleAuth = async (req, res, next) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-    if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-      res
-        .cookie('access_token', token, {
-          httpOnly: true,
-          signed: true,
-          secure: process.env.NODE_ENV === 'production',
-        })
-        .status(200)
-        .json(user._doc);
-    } else {
-      const newUser = new User({
-        ...req.body,
-        fromGoogle: true,
-      });
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-      const savedUser = newUser.save();
-      res
-        .cookie('access_token', token, {
-          httpOnly: true,
-          signed: true,
-          secure: process.env.NODE_ENV === 'production',
-        })
-        .status(200)
-        .json(savedUser._doc);
-    }
-  } catch (error) {
-    return next(createError(500, 'Something went wrong, try again!'));
-  }
-};
-
-module.exports = { signIn, signUp, googleAuth };
+module.exports = { signIn, signUp };

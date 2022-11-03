@@ -1,14 +1,14 @@
-const createError = require('../error');
 const jwt = require('jsonwebtoken');
 
 const verifyToken = async (req, res, next) => {
   const token = await req.cookies.access_token;
+
   if (!token) {
-    return next(createError(404, 'You are not authenticated!'));
+    return res.status(401).json('You are not authenticated!');
   }
 
-  await jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return next(createError(403, 'Token is not valid'));
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) res.status(403).json('Token is not valid!');
     req.user = user;
     next();
   });

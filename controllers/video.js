@@ -1,8 +1,41 @@
 const createError = require('../error');
 const Video = require('../models/Video');
 const User = require('../models/User');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 
-const addVideo = async (req, res) => {
+const uploadVideo = async (req, res, next) => {
+  try {
+    const result = await cloudinary.uploader.upload(
+      req.files.video.tempFilePath,
+      {
+        use_filename: true,
+        folder: 'mern-social/video',
+        resource_type: 'video',
+      }
+    );
+    fs.unlinkSync(req.files.video.tempFilePath);
+    res.status(200).json({ videoSrc: result.secure_url });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const uploadImg = async (req, res, next) => {
+  try {
+    const result = await cloudinary.uploader.upload(
+      req.files.image.tempFilePath,
+      { use_filename: true, folder: 'mern-social/img' }
+    );
+    fs.unlinkSync(req.files.image.tempFilePath);
+    res.status(200).json({ imgSrc: result.secure_url });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addVideo = async (req, res, next) => {
   const newVideo = new Video({ userId: req.user.id, ...req.body });
   try {
     const savedVideo = await newVideo.save();
@@ -104,4 +137,6 @@ module.exports = {
   trend,
   sub,
   search,
+  uploadVideo,
+  uploadImg,
 };

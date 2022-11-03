@@ -12,8 +12,16 @@ const {
   trend,
   sub,
   search,
+  uploadVideo,
+  uploadImg,
 } = require('../controllers/video');
 const verifyToken = require('../utils/verifyToken');
+
+//	upload video
+router.post('/upload', verifyToken, uploadVideo);
+
+//upload img
+router.post('/uploadimg', verifyToken, uploadImg);
 
 //create a video, need token
 router.post('/', verifyToken, addVideo);

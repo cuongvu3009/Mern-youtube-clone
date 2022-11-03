@@ -2,6 +2,13 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: 'dbgfpa4go',
+  api_key: '562393991281431',
+  api_secret: '7vasvnIzLaY_-_sm9fcSzCZAPjM',
+});
+const fileupload = require('express-fileupload');
 
 // extra security packages
 const helmet = require('helmet');
@@ -23,19 +30,16 @@ const videoRouter = require('./routes/videos');
 app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.json());
 app.set('trust proxy', 1);
-app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-  })
-);
+// app.use(
+//   rateLimiter({
+//     windowMs: 15 * 60 * 1000, // 15 minutes
+//     max: 100, // limit each IP to 100 requests per windowMs
+//   })
+// );
 app.use(helmet());
 app.use(cors());
 app.use(xss());
-
-app.get('/', (req, res) => {
-  res.send('<h1>Youtube-clone API</h1>');
-});
+app.use(fileupload({ useTempFiles: true }));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/comments', commentRouter);
@@ -54,7 +58,7 @@ app.use((err, req, res, next) => {
 });
 
 const connectDB = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
+  mongoose.connect(process.env.MONGO_URI);
   console.log('DB is connected!');
 };
 
